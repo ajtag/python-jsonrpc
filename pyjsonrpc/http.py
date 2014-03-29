@@ -15,8 +15,12 @@ import rpcerror
 import rpclib
 from rpcjson import json
 
+import httplib
+import gzip
+import StringIO
 
-def http_request(url, json_string, username = None, password = None):
+
+def http_request(url, json_string, username=None, password=None, gzipped=False):
     """
     Fetch data from webserver (POST request)
 
@@ -24,14 +28,45 @@ def http_request(url, json_string, username = None, password = None):
     :param username: If *username* is given, BASE authentication will be used.
     """
 
-    request = urllib2.Request(url, data = json_string)
+    request = urllib2.Request(url)
+
+    if gzipped:
+        jh = StringIO.StringIO()
+        gz = gzip.GzipFile(fileobj=jh, mode='wb')
+        gz.write(json_string)
+        gz.close()
+        json_string = jh.getvalue()
+        jh.close()
+
+        request.add_header('content-encoding', 'gzip')
+        request.add_header('Accept-Encoding', 'gzip')
+
+    request.add_data(json_string)
+
     request.add_header("Content-Type", "application/json")
     if username:
         base64string = base64.encodestring('%s:%s' % (username, password))[:-1]
         request.add_header("Authorization", "Basic %s" % base64string)
 
+
+
+    # handler=urllib2.HTTPHandler(debuglevel=1)
+    # opener = urllib2.build_opener(handler)
+    # urllib2.install_opener(opener)
+
     response = urllib2.urlopen(request)
+
+
     response_string = response.read()
+
+    if 'Content-Encoding' in response.headers:
+        if response.headers['Content-Encoding'] == 'gzip':
+            rh = StringIO.StringIO(response_string)
+            rz = gzip.GzipFile(fileobj=rh, mode='rb')
+            response_string = rz.read()
+            rz.close()
+            rh.close()
+
     response.close()
 
     return response_string
@@ -54,7 +89,8 @@ class HttpClient(object):
         self,
         url,
         username = None,
-        password = None
+        password = None,
+        gzipped = False
     ):
         """
         :param: URL to the JSON-RPC handler on the HTTP-Server.
@@ -62,11 +98,13 @@ class HttpClient(object):
 
         :param username: If *username* is given, BASE authentication will be used.
         :param password: Password for BASE authentication.
+        :param gzipped: Compress requests.
         """
 
         self.url = url
         self.username = username
         self.password = password
+        self.gzip_requests = gzipped
 
 
     def call(self, method, *args, **kwargs):
@@ -95,7 +133,8 @@ class HttpClient(object):
             url = self.url,
             json_string = request_json,
             username = self.username,
-            password = self.password
+            password = self.password,
+            gzipped=self.gzip_requests
         )
 
         # Convert JSON-RPC-response to python-object
