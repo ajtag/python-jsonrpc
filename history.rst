@@ -1,8 +1,106 @@
 #####################################
-Python JSON-RPC Library Client Server
+Python JSON-RPC Client Server Library
 #####################################
 
-by Gerold Penz 2013
+by Gerold Penz 2013-2014
+
+
+=============
+Version 0.5.2
+=============
+
+2014-10-11
+
+- HTTP-Server: The content-type is changeable, now. Default content-type stays
+  "application/json". If you want to change the content-type::
+
+    class RequestHandler(pyjsonrpc.HttpRequestHandler):
+
+        content-type = "application/json-rpc"
+
+        ...
+
+- HTTP-Server GET-Request: Check if method name given
+
+
+=============
+Version 0.5.1
+=============
+
+2014-09-12
+
+- Descriptions
+
+
+=============
+Version 0.5.0
+=============
+
+2014-09-12
+
+- The new decorator *@pyjsonrpc.rpcmethod* signs methods as JSON-RPC-Methods.
+
+- Examples with the new *rpcmethod*-decorator added.
+
+- I think, *python-jsonrpc* is stable enough to set the classifier to
+  "Development Status :: 5 - Production/Stable".
+
+
+=============
+Version 0.4.3
+=============
+
+2014-09-12
+
+- HttpClient: *cookies*-parameter added. Now, it is possible to add
+  simple cookie-items.
+
+
+=============
+Version 0.4.2
+=============
+
+2014-09-12
+
+- HttpClient: New parameters added:
+  - additional_headers: Possibility to add additional header items.
+  - content_type: Possibility to change the content-type header.
+
+
+=============
+Version 0.4.1
+=============
+
+2014-08-19
+
+- HttpClient: The new timeout parameter specifies a timeout in seconds for
+  blocking operations like the connection attempt (if not specified,
+  the global default timeout setting will be used). Thanks *geerk* :-)
+
+  See: https://github.com/gerold-penz/python-jsonrpc/pull/6
+
+
+=============
+Version 0.4.0
+=============
+
+2014-06-28
+
+- It is now possible to send multiple calls in one request.
+
+- *multiple_example.py* added.
+
+
+=============
+Version 0.3.5
+=============
+
+2014-06-28
+
+- Bunch is now a setup-dependency.
+
+- The new method *HttpClient.notify* sends notifications to the server,
+  without `id` as parameter.
 
 
 =============
