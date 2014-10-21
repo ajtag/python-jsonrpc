@@ -4,7 +4,8 @@
 from rpcrequest import (
     parse_request_json,
     create_request_json,
-    create_request_dict
+    create_request_dict,
+    Request
 )
 from rpcresponse import (
     parse_response_json,
@@ -12,8 +13,9 @@ from rpcresponse import (
 )
 from http import (
     HttpClient,
-    # for compatibility with simple-jsonrpc and jsonrpclib
+    # for better compatibility to other libraries
     HttpClient as Server,
+    HttpClient as ServiceProxy,
     ThreadingHttpServer,
     HttpRequestHandler,
     handle_cgi_request
@@ -29,4 +31,8 @@ from rpcerror import (
 from rpclib import (
     JsonRpc,
     rpcmethod
+    rpcmethod,
+    # for better compatibility to other libraries
+    rpcmethod as ServiceMethod
 )
+

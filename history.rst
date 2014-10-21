@@ -6,6 +6,30 @@ by Gerold Penz 2013-2014
 
 
 =============
+Version 0.5.4
+=============
+
+2014-10-21
+
+- New Alias `ServiceProxy` added. For better compatibility to other libraries.
+
+- *Request.from_string()* added
+
+- *Request.to_string()* added
+
+- Examples added
+
+
+=============
+Version 0.5.3
+=============
+
+2014-10-21
+
+- New Alias `ServiceMethod` added, for the *@pyjsonrpc.rpcmethod*-decorator.
+
+
+=============
 Version 0.5.2
 =============
 

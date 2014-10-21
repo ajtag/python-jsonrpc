@@ -74,6 +74,18 @@ class Response(Bunch):
         return retdict
 
 
+    def to_string(self):
+        """
+        Returns the response as JSON-string
+        """
+
+        return json.dumps(self.to_dict())
+
+
+    # Alias
+    dumps = to_string
+
+
     @classmethod
     def from_dict(cls, response_dict):
         """
@@ -114,15 +126,30 @@ class Response(Bunch):
         )
 
 
-def parse_response_json(json_string):
-    """
-    Returns a RPC-Response or a list with RPC-Responses
-    """
+    @classmethod
+    def from_string(cls, json_string):
+        """
+        Returns a Response-object or a list with Response-objects
+        """
 
-    if not json_string:
-        return
+        if not json_string:
+            return
 
-    data = json.loads(json_string)
+        data = json.loads(json_string)
+
+        if isinstance(data, list):
+            retlist = []
+            for response in data:
+                retlist.append(cls.from_dict(response))
+            return retlist
+        else:
+            return cls.from_dict(data)
+
+
+    # Alias
+    loads = from_string
+
+
 
     if isinstance(data, list):
         retlist = []
@@ -133,3 +160,6 @@ def parse_response_json(json_string):
         return Response.from_dict(data)
 
 
+# Aliases
+parse_response_json = Response.from_string
+parse_response_string = Response.from_string
