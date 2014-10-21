@@ -30,7 +30,6 @@ from rpcerror import (
 )
 from rpclib import (
     JsonRpc,
-    rpcmethod
     rpcmethod,
     # for better compatibility to other libraries
     rpcmethod as ServiceMethod

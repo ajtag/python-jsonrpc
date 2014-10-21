@@ -150,16 +150,6 @@ class Response(Bunch):
     loads = from_string
 
 
-
-    if isinstance(data, list):
-        retlist = []
-        for response in data:
-            retlist.append(Response.from_dict(response))
-        return retlist
-    else:
-        return Response.from_dict(data)
-
-
 # Aliases
 parse_response_json = Response.from_string
 parse_response_string = Response.from_string
