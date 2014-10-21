@@ -30,6 +30,3 @@ from rpclib import (
     JsonRpc,
     rpcmethod
 )
-
-
-print 'woo'
