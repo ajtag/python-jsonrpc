@@ -31,7 +31,7 @@ def http_request(
     additional_headers = None,
     content_type = None,
     cookies = None,
-    gzipped=False
+    gzipped = False
 ):
     """
     Fetch data from webserver (POST request)
