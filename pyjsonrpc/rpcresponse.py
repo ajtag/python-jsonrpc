@@ -83,11 +83,25 @@ class Response(Bunch):
         error = response_dict.get("error")
         if error:
             result = None
-            error = cls.Error(
-                code = error.get("code"),
-                message = error.get("message"),
-                data = error.get("data")
-            )
+
+            if 'fault' in error:
+                error = cls.Error(
+                    code = error.get("faultCode"),
+                    message = error.get("fault"),
+                    data = error.get("faultString")
+                )
+            elif 'code' in error:
+                error = cls.Error(
+                    code = error.get("code"),
+                    message = error.get("message"),
+                    data = error.get("data")
+                )
+            else:
+                error = cls.Error(
+                    code = -1,
+                    message = 'genericError',
+                    data = '\n'.join(['%s: %s' % (k,v) for k,v in error])
+                )
         else:
             result = response_dict.get("result")
             error = None
@@ -117,3 +131,5 @@ def parse_response_json(json_string):
         return retlist
     else:
         return Response.from_dict(data)
+
+

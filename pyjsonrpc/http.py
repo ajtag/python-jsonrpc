@@ -130,7 +130,11 @@ class HttpClient(object):
         url,
         username = None,
         password = None,
-        gzipped = False
+        gzipped = False,
+        timeout = None,
+        additional_headers = None,
+        content_type = None,
+        cookies = None
     ):
         """
         :param: URL to the JSON-RPC handler on the HTTP-Server.
@@ -139,6 +143,9 @@ class HttpClient(object):
         :param username: If *username* is given, BASE authentication will be used.
         :param password: Password for BASE authentication.
         :param gzipped: Compress requests.
+        :param timeout:
+
+
         """
 
         self.url = url
@@ -179,7 +186,7 @@ class HttpClient(object):
             json_string = request_json,
             username = self.username,
             password = self.password,
-            gzipped=self.gzip_requests
+            gzipped=self.gzip_requests,
             timeout = self.timeout,
             additional_headers = self.additional_headers,
             content_type = self.content_type,
@@ -204,7 +211,6 @@ class HttpClient(object):
         elif isinstance(response, list):
             # Bei Listen wird keine Fehlerauswerung gemacht
             return response
-
 
     def notify(self, method, *args, **kwargs):
         """
