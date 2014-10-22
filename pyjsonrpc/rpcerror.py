@@ -17,6 +17,13 @@ class JsonRpcError(RuntimeError):
 
 jsonrpcerrors[JsonRpcError.code] = JsonRpcError
 
+class JSONApplicationError(JsonRpcError):
+      def __init__(self, code, message = None, data = None):
+        RuntimeError.__init__(self)
+        self.code = code
+        self.message = message or self.message
+        self.data = data
+
 
 class ParseError(JsonRpcError):
     code = -32700

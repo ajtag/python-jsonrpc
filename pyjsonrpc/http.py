@@ -81,8 +81,6 @@ def http_request(
     # opener = urllib2.build_opener(handler)
     # urllib2.install_opener(opener)
 
-    response = urllib2.urlopen(request)
-
     # Cookies
     if cookies:
         cookie = Cookie.SimpleCookie(cookies)
@@ -113,8 +111,6 @@ def http_request(
 
 
 class HttpClient(object):
-
-
     class _Method(object):
 
         def __init__(self, http_client_instance, method):
@@ -123,7 +119,6 @@ class HttpClient(object):
 
         def __call__(self, *args, **kwargs):
             return self.http_client_instance.call(self.method, *args, **kwargs)
-
 
     def __init__(
         self,
@@ -156,8 +151,6 @@ class HttpClient(object):
         self.additional_headers = additional_headers
         self.content_type = content_type
         self.cookies = cookies
-
-
 
     def call(self, method, *args, **kwargs):
         """
@@ -201,10 +194,17 @@ class HttpClient(object):
         if isinstance(response, rpcresponse.Response):
             if response.error:
                 # Raise error
-                raise rpcerror.jsonrpcerrors[response.error.code](
-                    message = response.error.message,
-                    data = response.error.data
-                )
+                if response.error.code in rpcerror.jsonrpcerrors:
+                    raise rpcerror.jsonrpcerrors[response.error.code](
+                        message = response.error.message,
+                        data = response.error.data
+                    )
+                else:
+                    raise rpcerror.JSONApplicationError(
+                        code=response.error.code,
+                        message=response.error.message,
+                        data=response.error.data
+                    )
             else:
                 # Return result
                 return response.result
